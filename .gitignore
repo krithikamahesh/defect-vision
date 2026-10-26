@@ -9,6 +9,10 @@
 !*.ipynb
 !.gitignore
 !*.sh
+!*.txt
+!README.md
+!*.json
+
 
 # Never descend into virtual envs / caches
 defectdetect/
