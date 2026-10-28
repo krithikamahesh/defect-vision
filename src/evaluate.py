@@ -37,7 +37,7 @@ def compute_metrics(ytrues, ypreds, yprobs, class_names, threshold=0.5):
     print("ROC AUC Score:", auc)
     logging.info("ROC AUC Score: %s", auc)
 
-    conf_matrix = confusion_matrix(ytrues, ypreds)
+    conf_matrix = confusion_matrix(ytrues, (yprobs[:, 1] >= threshold).int())
     print("Confusion Matrix:")
     print(conf_matrix)
     logging.info("Confusion Matrix:\n%s", conf_matrix)

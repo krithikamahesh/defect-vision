@@ -16,6 +16,60 @@ with open('configs/resnet18.yaml', 'r') as file:
     config = yaml.safe_load(file)
 
 
+import yaml
+import torch
+import torchvision.transforms as transforms
+from PIL import Image
+
+# 1. Mock YAML loading (simulating your config file)
+yaml_config = """
+transforms:
+  train: 
+    - Resize: 224
+    - ToTensor: true
+    - Normalize:
+        mean: [0.485, 0.456, 0.406]
+        std: [0.229, 0.224, 0.225]
+  val:
+    - Resize: 224
+    - ToTensor: true
+    - Normalize:
+        mean: [0.485, 0.456, 0.406]
+        std: [0.229, 0.224, 0.225]
+  test:
+    - Resize: 224
+    - ToTensor: true
+    - Normalize:
+        mean: [0.485, 0.456, 0.406]
+        std: [0.229, 0.224, 0.225]
+"""
+config = yaml.safe_load(yaml_config)
+
+# 2. Preprocessing factory function
+def build_transforms(transform_config):
+    """
+    Parses the list of transforms from the YAML config and returns 
+    a torchvision.transforms.Compose object.
+    """
+    transform_list = []
+    
+    for transform_item in transform_config:
+        for name, args in transform_item.items():
+            transform_class = getattr(transforms, name)
+            
+            if args is True:
+                instance = transform_class()
+            elif isinstance(args, dict):
+                instance = transform_class(**args)
+            else:
+                instance = transform_class(args)
+                
+            transform_list.append(instance)
+            
+    return transforms.Compose(transform_list)
+
+
+
 def data_setup():
     seed = config['.global_settings']['seed']
     test_size = config['data']['test_size']
@@ -25,9 +79,10 @@ def data_setup():
     test_path = config['data']['test_path']
     val_path = config['data']['val_path']
 
-    train_original = torch.datasets.ImageFolder(train_path, transform=config['data']['transforms']['train'])
-    val_original = torch.datasets.ImageFolder(val_path, transform=config['data']['transforms']['val'])
-    test_dataset = torch.datasets.ImageFolder(test_path, transform=config['data']['transforms']['test'])
+    # Build transforms for each split
+    train_original = torch.datasets.ImageFolder(train_path, transform=build_transforms(config['data']['transforms']['train']))
+    val_original = torch.datasets.ImageFolder(val_path, transform=build_transforms(config['data']['transforms']['val']))
+    test_dataset = torch.datasets.ImageFolder(test_path, transform=build_transforms(config['data']['transforms']['test']))
 
     if restratify:
         # Stratify Train into Train and Validation sets

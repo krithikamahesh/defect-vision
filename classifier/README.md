@@ -1,0 +1,3 @@
+The original val folder is tiny (about 16 images). A score on 16 images is very noisy, so don't use it to choose between models. The simple fix is to carve a validation set out of train (stratified, with a fixed seed). Keep test untouched until the final evaluation.
+Never tune on test. Use val for decisions like the learning rate, the model choice and class weights vs oversampling. Use test once, at the end.
+Possible patient leakage. Look at the filenames, and if the same patient ID could appear across splits, mention that in "Limitations".

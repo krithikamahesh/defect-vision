@@ -1,0 +1,39 @@
+Data: MVTec AD for industrial defects, or PlantVillage for leaf diseases.
+
+Models:
+Baseline: a ResNet or EfficientNet fine-tuned with transfer learning.
+Detection: YOLOv8 for localization.
+Unsupervised option for MVTec: a PatchCore or autoencoder anomaly detector.
+
+What makes it stand out:
+Add Grad-CAM heatmaps to explain predictions.
+Use augmentation and class-imbalance handling.
+Report a confusion matrix, per-class F1 and ROC-AUC.
+Include failure-case analysis, showing images the model gets wrong and why.
+
+
+Deliverables: 
+A Gradio or Streamlit app where users upload an image and get the prediction plus a heatmap. 
+Deploy it free on Hugging Face Spaces and add the live link to the README. 
+Export to ONNX and report the inference latency.
+
+
+A README with the problem statement, a results table, GIFs or screenshots, and how to run it.
+Fixed random seeds and tracked experiments (Weights & Biases or MLflow).
+A Dockerfile and a basic GitHub Actions workflow that runs lint and tests.
+A short "Limitations and next steps" section.
+
+
+
+Learnings:
+
+Answers:
+1. ResNet has been pretrained on a large corpus - the idea here is to extract and reuse intermediate weights from an intermediate layer to tell apart good vs defects.
+2. I'm not sure about YOLOv8 here - is this a good idea for benchmarking - you tell me which is a better way to go with the data I have currently.
+
+Phase 2:
+I dont know the answers for this
+
+Categories I want to start with: wood, hazelnut, cable, transistor, leather.
+Why - these are either naturally available (can be extended for disease detection/ health anomalies) or can be extended to catch manufacturing defects/technical glitches
+No GPU.

@@ -17,5 +17,12 @@ def build_model(model_name, num_classes):
         return backbone, head, model
     else:
         raise ValueError(f"Unsupported model_name: {model_name}")
+
+
+def load_model(model_name, num_classes, checkpoint_path=None):
+    backbone, head, model = build_model(model_name, num_classes)
+    if checkpoint_path is not None:
+        model.load_state_dict(torch.load(checkpoint_path))
+    return backbone, head, model
     
     
